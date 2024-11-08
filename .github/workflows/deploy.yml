@@ -1,0 +1,38 @@
+name: Flask App CI
+
+# Trigger this workflow on pushes and pull requests to the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the code in the repository
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      # Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'  # Specify the Python version
+
+      # Install dependencies in a virtual environment
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      # Run the application or tests with environment variables
+      - name: Run Tests or Application
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          source venv/bin/activate
+          python -m unittest discover  # Adjust to your testing or app command
