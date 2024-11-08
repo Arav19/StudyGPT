@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study GPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            background-image: 
+                linear-gradient(0deg, rgba(200,200,200,0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(200,200,200,0.2) 1px, transparent 1px);
+            background-size: 20px 20px; /* Size of each grid cell */
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #3B3F4F;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 0;
+            box-shadow: 3px 0px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .sidebar h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-links {
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-links a {
+            display: block;
+            color: #c7c7d3;
+            text-decoration: none;
+            padding: 1rem 0;
+            border-bottom: 1px solid #4b4f62;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: #4a90e2;
+            color: #fff;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            height: 100%;
+        }
+
+        .header {
+            background-color: #4A90E2;
+            color: #fff;
+            padding: 1.2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tag-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background-color: #4A90E2;
+            color: #fff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .chat-box-container {
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message p {
+            background-color: #e1e7f1;
+            color: #333;
+            padding: 0.7rem 1rem;
+            border-radius: 20px;
+            max-width: 80%;
+        }
+
+        .message.user p {
+            background-color: #4A90E2;
+            color: #fff;
+            align-self: flex-end;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #ddd;
+            background-color: #f0f2f5;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 0.7rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            outline: none;
+        }
+
+        .input-container button {
+            padding: 0.7rem 1.2rem;
+            font-size: 1rem;
+            border: none;
+            background-color: #4A90E2;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #357ABD;
+        }
+
+        .footer {
+            background-color: #3B3F4F;
+            color: #fff;
+            text-align: center;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #4A90E2;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dropdown Panel Styling */
+        .dropdown-panel {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 10px;
+            margin-top: 20px;
+
+            width: 200px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1;
+        }
+
+        .dropdown-panel select {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .dropdown-panel button {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dropdown-panel button:hover {
+            background-color: #357ABD;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Study GPT</h2>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#" id="chooseSyllabusBtn" onclick="toggleDropdown(event)">Choose Syllabus</a>
+            <a href="#">Pricing</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <div id="dropdownPanel" class="dropdown-panel">
+            <label for="examBoard">Exam Board</label>
+            <select id="examBoard">
+                <option value="CBSE">CBSE</option>
+                <option value="ICSE">ICSE</option>
+                <option value="IB">IB</option>
+                <option value="IGCSE">IGCSE</option>
+            </select>
+
+            <label for="classLevel">Class Level</label>
+            <select id="classLevel">
+                <option value="Class 10">Class 10</option>
+                <option value="Class 11">Class 11</option>
+                <option value="Class 12">Class 12</option>
+            </select>
+
+            <label for="subject">Subject</label>
+            <select id="subject">
+                <option value="Biology">Biology</option>
+                <option value="Physics">Physics</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Economics">Economics</option>
+            </select>
+
+            <button onclick="applySyllabus()">Apply</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <p>Ask Study GPT Your Questions</p>
+        </div>
+        <div class="chat-container">
+            <div class="tag-container" id="tagContainer">
+                <!-- Tags will appear here dynamically -->
+            </div>
+            <div class="chat-box-container">
+                <div id="chatBox" class="chat-box">
+                    <!-- Messages will be appended here dynamically -->
+                </div>
+                <div class="input-container">
+                    <input type="text" id="userInput" placeholder="Type your question...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Study GPT. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </div>
+
+    <script>
+        const tags = { examBoard: 'CBSE', level: 'Class 12', subject: 'Biology' };
+
+        function displayTags() {
+            const tagContainer = document.getElementById('tagContainer');
+            tagContainer.innerHTML = '';
+            for (const [key, value] of Object.entries(tags)) {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.innerText = value;
+                tagContainer.appendChild(tag);
+            }
+        }
+
+        function toggleDropdown(event) {
+            event.preventDefault(); // Prevent link navigation
+            const dropdownPanel = document.getElementById("dropdownPanel");
+            dropdownPanel.style.display = dropdownPanel.style.display === "none" || dropdownPanel.style.display === "" ? "flex" : "none";
+        }
+
+        function applySyllabus() {
+            const examBoard = document.getElementById("examBoard").value;
+            const classLevel = document.getElementById("classLevel").value;
+            const subject = document.getElementById("subject").value;
+
+            // Update tags based on selected options
+            tags.examBoard = examBoard;
+            tags.level = classLevel;
+            tags.subject = subject;
+
+            // Display updated tags and close dropdown
+            displayTags();
+            document.getElementById("dropdownPanel").style.display = "none";
+        }
+
+        function appendMessage(text, isUser = false) {
+            const chatBox = document.getElementById("chatBox");
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", isUser ? "user" : "bot");
+            const messageText = document.createElement("p");
+            messageText.innerText = text;
+            messageDiv.appendChild(messageText);
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            if (userInput.trim() === "") return;
+
+            appendMessage(userInput, true);
+            document.getElementById("userInput").value = "";
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userInput, tags })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.response);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                appendMessage("An error occurred.");
+            });
+        }
+
+        document.getElementById("userInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") sendMessage();
+        });
+
+        // Display default tags on page load
+        displayTags();
+    </script>
+</body>
+</html>
