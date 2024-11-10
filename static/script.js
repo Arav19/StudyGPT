@@ -1,8 +1,10 @@
+// Initial tag data
 const tags = { examBoard: 'CBSE', level: 'Class 12', subject: 'Biology' };
 
+// Function to display the tags based on user selection
 function displayTags() {
     const tagContainer = document.getElementById('tagContainer');
-    tagContainer.innerHTML = '';
+    tagContainer.innerHTML = '';  // Clear previous tags
     for (const [key, value] of Object.entries(tags)) {
         const tag = document.createElement('span');
         tag.className = 'tag';
@@ -11,8 +13,9 @@ function displayTags() {
     }
 }
 
+// Function to toggle dropdown panel
 function toggleDropdown(event) {
-    event.preventDefault(); // Prevent link navigation
+    event.preventDefault();
     const dropdownPanel = document.getElementById("dropdownPanel");
     dropdownPanel.style.display = dropdownPanel.style.display === "none" || dropdownPanel.style.display === "" ? "flex" : "none";
 }
@@ -22,27 +25,34 @@ function applySyllabus() {
     const classLevel = document.getElementById("classLevel").value;
     const subject = document.getElementById("subject").value;
 
-    // Update tags based on selected options
+    // Update the tags object with the selected values
     tags.examBoard = examBoard;
     tags.level = classLevel;
     tags.subject = subject;
 
-    // Display updated tags and close dropdown
+    // Display the updated tags on the screen
     displayTags();
+    
+    // Close the dropdown
     document.getElementById("dropdownPanel").style.display = "none";
 }
 
+
+// Append messages to chatbox
 function appendMessage(text, isUser = false) {
     const chatBox = document.getElementById("chatBox");
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message", isUser ? "user" : "bot");
+
     const messageText = document.createElement("p");
     messageText.innerText = text;
     messageDiv.appendChild(messageText);
+
     chatBox.appendChild(messageDiv);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
 }
 
+// Send message
 function sendMessage() {
     const userInput = document.getElementById("userInput").value;
     if (userInput.trim() === "") return;
@@ -57,24 +67,20 @@ function sendMessage() {
         },
         body: JSON.stringify({ message: userInput, tags })
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         appendMessage(data.response);
     })
     .catch(error => {
-        console.error("Fetch error:", error);
-        appendMessage("An error occurred: " + error.message);
+        console.error("Error:", error);
+        appendMessage("An error occurred.");
     });
 }
 
+// Enter key to send message
 document.getElementById("userInput").addEventListener("keypress", function(event) {
     if (event.key === "Enter") sendMessage();
 });
 
-// Display default tags on page load
+// Initialize tags
 displayTags();
