@@ -2,31 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenius</title>
     <style>
+        #whatsappButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
 
-        
+        #whatsappButton img {
+            width: 50px;
+            height: auto;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
 
-#whatsappButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: auto; /* Adjust as needed to keep the natural dimensions */
-    height: auto;
-    z-index: 1000;
-}
-
-#whatsappButton img {
-    width: 50px; /* Set desired width */
-    height: auto; /* Preserve aspect ratio */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
-}
-
-#whatsappButton:hover img {
-    transform: scale(1.1); /* Slightly enlarge on hover */
-}
-
+        #whatsappButton:hover img {
+            transform: scale(1.1);
+        }
 
         body {
             font-family: Arial, sans-serif;
@@ -38,7 +33,6 @@
             background-color: #1c1c1c;
         }
 
-        /* Background network canvas */
         .network-canvas {
             position: fixed;
             top: 0;
@@ -49,7 +43,6 @@
             pointer-events: none;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 250px;
             background-color: #2e2e2e;
@@ -59,11 +52,10 @@
             align-items: center;
             padding: 1.5rem 0;
             box-shadow: 3px 0px 10px rgba(0, 0, 0, 0.3);
-            position: relative;
         }
 
         .sidebar img {
-            width: 100px; /* Adjust the size of the logo */
+            width: 100px;
             margin-bottom: 0.5rem;
         }
 
@@ -90,7 +82,6 @@
             color: #fff;
         }
 
-        /* Header with gradient */
         .header {
             background: linear-gradient(120deg, #7ee69a,#9996eb, #af7be3);
             background-size: 200% 200%;
@@ -100,9 +91,7 @@
             text-align: center;
             font-size: 1.2rem;
             box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
-            font-weight:900;
-      
-            
+            font-weight: 900;
         }
 
         @keyframes gradientShift {
@@ -229,55 +218,26 @@
             text-decoration: underline;
         }
 
-        /* Dropdown Panel Styling */
-.dropdown-panel {
-    position: absolute;
-    top: 50%; /* Centers the dropdown vertically */
-    left: 100%;
-    margin-left: 10px;
-    transform: translateY(-50%); /* Adjusts for exact center alignment */
-    width: 200px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-    z-index: 1;
-}
-
-
-        .dropdown-panel select {
-            width: 100%;
-            padding: 0.5rem;
-            font-size: 1rem;
+        .dropdown-panel {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            width: 200px;
+            background-color: #fff;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        .dropdown-panel button {
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background-color: #8c52ff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .dropdown-panel button:hover {
-            background-color: #357ABD;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <canvas class="network-canvas" id="networkCanvas"></canvas> <!-- Network canvas for animated background -->
+    <canvas class="network-canvas" id="networkCanvas"></canvas>
 
     <div class="sidebar">
-        <img src="logo.png" alt="Logo"> <!-- Logo image added here -->
+        <img src="logo.png" alt="Logo">
         <h2>Zenius</h2>
         <div class="nav-links">
             <a href="#">Pricing</a>
@@ -293,29 +253,18 @@
                 <option value="IB">IB</option>
                 <option value="IGCSE">IGCSE</option>
             </select>
-
             <label for="classLevel">Class Level</label>
             <select id="classLevel">
                 <option value="Class 9-10">Class 9-10</option>
                 <option value="Class 10-11">Class 10-11</option>
                 <option value="Class 11-12">Class 11-12</option>
             </select>
-
             <label for="subject">Subject</label>
             <select id="subject">
                 <option value="Biology">Biology</option>
                 <option value="Physics">Physics</option>
                 <option value="Mathematics">Mathematics</option>
-                <option value="English">English</option>
-                <option value="Economics">Economics</option>
-                <option value="World History">World History</option>
-                <option value="Indian History">Indian History</option>
-                <option value="Hindi">Hindi</option>
-                <option value="Sanskrit">Sanskrit</option>
-                <option value="Tamil">Tamil</option>
-                <option value="Urdu">Urdu</option>
             </select>
-            
             <button onclick="applySyllabus()">Apply</button>
         </div>
     </div>
@@ -325,98 +274,9 @@
             <p>Welcome to Zenius. The AI tool with your syllabus.</p>
         </div>
         <div class="chat-container">
-            <div class="tag-container" id="tagContainer">
-                <!-- Tags will appear here dynamically -->
-            </div>
+            <div class="tag-container" id="tagContainer"></div>
             <div class="chat-box-container">
-                <div id="chatBox" class="chat-box">
-                    <!-- Messages will be appended here dynamically -->
-                </div>
+                <div id="chatBox" class="chat-box"></div>
                 <div class="input-container">
                     <input type="text" id="userInput" placeholder="Type your question...">
-                    <button onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-        </div>
-        <div class="footer">
-            <p>&copy; 2024 Zenius. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-        </div>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('networkCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    
-        const nodes = [];
-        const nodeCount = 500;
-        class Node {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.dx = (Math.random() - 0.5) * 0.5;
-        this.dy = (Math.random() - 0.5) * 0.5;
-    }
-
-    update() {
-        if (this.x < 0 || this.x > canvas.width) this.dx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.dy *= -1;
-
-        this.x += this.dx;
-        this.y += this.dy;
-    }
-
-    draw() {
-        // No circle drawing, only the connecting lines
-    }
-}
-
-function drawNetwork() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    nodes.forEach(node => node.update());
-
-    // Draw connections between nodes
-    for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-            const distance = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
-            if (distance < 120) {
-                ctx.beginPath();
-                ctx.moveTo(nodes[i].x, nodes[i].y);
-                ctx.lineTo(nodes[j].x, nodes[j].y);
-                ctx.strokeStyle = `rgba(67, 61, 110, ${0.3 - distance / 400})`;  // Line color and transparency
-                ctx.lineWidth = 1.2;  // Adjust line width as needed
-                ctx.stroke();
-            }
-        }
-    }
-
-    requestAnimationFrame(drawNetwork);
-}
-
-    
-        function initNetwork() {
-            for (let i = 0; i < nodeCount; i++) {
-                nodes.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
-            }
-            drawNetwork();
-        }
-    
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            nodes.length = 0;
-            initNetwork();
-        });
-    
-        initNetwork();
-    </script>
-
-<a href="https://wa.me/your-number" target="_blank" id="whatsappButton">
-    <img src="WhatsApp.png" alt="WhatsApp Chat" />
-</a>
-
-
-<script src="script.js"></script>
-    </body>
-</html>
+                    <button onclick
