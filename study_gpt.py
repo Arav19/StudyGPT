@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS  # Import CORS for cross-origin requests
 import openai
 import os
-from openai import APIConnectionError, InvalidRequestError, AuthenticationError, RateLimitError, OpenAIError
+
+# Only import the available errors
+from openai import OpenAIError, APIConnectionError, AuthenticationError, RateLimitError
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -32,9 +34,6 @@ def chat():
     except APIConnectionError as e:  # Correct for network issues
         print("API Connection Error:", e)
         return jsonify({"response": "A network error occurred."}), 500
-    except InvalidRequestError as e:  # Invalid requests
-        print("Invalid Request:", e)
-        return jsonify({"response": "An invalid request was made."}), 400
     except AuthenticationError as e:  # Authentication issues
         print("Authentication Error:", e)
         return jsonify({"response": "API Key authentication failed."}), 401
