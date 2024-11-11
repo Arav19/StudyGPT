@@ -13,11 +13,17 @@ function displayTags() {
     }
 }
 
-// Function to toggle dropdown panel
+// Function to toggle dropdown panel with animation
 function toggleDropdown(event) {
     event.preventDefault();
     const dropdownPanel = document.getElementById("dropdownPanel");
-    dropdownPanel.style.display = dropdownPanel.style.display === "none" || dropdownPanel.style.display === "" ? "flex" : "none";
+    if (dropdownPanel.style.display === "none" || dropdownPanel.style.display === "") {
+        dropdownPanel.style.display = "flex";
+        dropdownPanel.style.opacity = "1"; // Add opacity for smooth display
+    } else {
+        dropdownPanel.style.opacity = "0";
+        setTimeout(() => dropdownPanel.style.display = "none", 300); // Delay for fade-out effect
+    }
 }
 
 function applySyllabus() {
@@ -37,7 +43,6 @@ function applySyllabus() {
     document.getElementById("dropdownPanel").style.display = "none";
 }
 
-
 // Append messages to chatbox
 function appendMessage(text, isUser = false) {
     const chatBox = document.getElementById("chatBox");
@@ -52,15 +57,16 @@ function appendMessage(text, isUser = false) {
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
 }
 
-// Send message
+// Send message to the server
 function sendMessage() {
     const userInput = document.getElementById("userInput").value;
     if (userInput.trim() === "") return;
 
     appendMessage(userInput, true);
     document.getElementById("userInput").value = "";
+    document.getElementById("userInput").focus(); // Re-focus on input field
 
-    fetch('/chat', {
+    fetch('https://study-gpt-vbvw.onrender.com/chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -73,13 +79,16 @@ function sendMessage() {
     })
     .catch(error => {
         console.error("Error:", error);
-        appendMessage("An error occurred.");
+        appendMessage("Unable to connect to the server. Please try again later.");
     });
 }
 
 // Enter key to send message
 document.getElementById("userInput").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") sendMessage();
+    if (event.key === "Enter") {
+        event.preventDefault(); // Prevent default form submission
+        sendMessage();
+    }
 });
 
 // Initialize tags
