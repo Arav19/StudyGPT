@@ -3,7 +3,7 @@ from flask_cors import CORS  # Import CORS for cross-origin requests
 import openai
 import os
 
-# Only import the available errors
+# Import error classes available in the openai library
 from openai import OpenAIError, APIConnectionError, AuthenticationError, RateLimitError
 
 app = Flask(__name__)
