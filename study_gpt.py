@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS  # Import CORS for cross-origin requests
 import openai
 import os
-from openai.error import APIConnectionError, InvalidRequestError, AuthenticationError, RateLimitError, OpenAIError
+from openai import APIConnectionError, InvalidRequestError, AuthenticationError, RateLimitError, OpenAIError
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
