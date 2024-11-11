@@ -28,15 +28,21 @@ def chat():
         reply_text = response['choices'][0]['message']['content'].strip()
         return jsonify({"response": reply_text})
 
-    except openai.error.APIError as e:
+    except openai.error.APIConnectionError as e:  # Correct for network issues
+        print("API Connection Error:", e)
+        return jsonify({"response": "A network error occurred."}), 500
+    except openai.error.InvalidRequestError as e:  # Invalid requests
+        print("Invalid Request:", e)
+        return jsonify({"response": "An invalid request was made."}), 400
+    except openai.error.AuthenticationError as e:  # Authentication issues
+        print("Authentication Error:", e)
+        return jsonify({"response": "API Key authentication failed."}), 401
+    except openai.error.RateLimitError as e:  # Rate limit errors
+        print("Rate Limit Exceeded:", e)
+        return jsonify({"response": "Rate limit exceeded, please try again later."}), 429
+    except openai.error.OpenAIError as e:  # Generic OpenAI API errors
         print("OpenAI API Error:", e)
         return jsonify({"response": "An error occurred with the OpenAI API."}), 500
-    except openai.error.AuthenticationError as e:
-        print("Authentication Error:", e)
-        return jsonify({"response": "Invalid API key or authentication error."}), 401
-    except openai.error.RateLimitError as e:
-        print("Rate Limit Exceeded:", e)
-        return jsonify({"response": "Rate limit exceeded. Please try again later."}), 429
     except Exception as e:
         print("General Error:", e)
         return jsonify({"response": "An unexpected error occurred."}), 500
