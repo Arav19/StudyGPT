@@ -4,8 +4,8 @@ import openai
 import os
 import logging
 
-# Import available error classes from OpenAI library
-from openai import APIConnectionError, AuthenticationError, RateLimitError, OpenAIError
+# Import only available error classes from OpenAI library
+from openai.error import APIConnectionError, AuthenticationError, RateLimitError, OpenAIError
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -38,7 +38,7 @@ def chat():
         # Log the response to see if there are any issues
         logging.info(f"OpenAI Response: {response}")
 
-        reply_text = response['choices'][0]['message']['content'].strip()
+        reply_text = response.choices[0].message['content'].strip()
         return jsonify({"response": reply_text})
 
     except APIConnectionError as e:  # Correct for network issues
