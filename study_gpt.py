@@ -4,8 +4,8 @@ import openai
 import os
 import logging
 
-# Import only available error classes from OpenAI library
-from openai import OpenAIError, APIError, APIConnectionError, RateLimitError, AuthenticationError
+# Import available error classes from OpenAI library
+from openai.error import APIConnectionError, AuthenticationError, RateLimitError, OpenAIError
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -34,7 +34,7 @@ def chat():
         if not data or "message" not in data:
             logging.warning("No message found in request data.")
             return jsonify({"response": "No message provided."}), 400
-        
+
         user_input = data.get("message", "")
 
         # Log user input
@@ -53,16 +53,16 @@ def chat():
         logging.info(f"Reply text: {reply_text}")
         return jsonify({"response": reply_text})
 
-    except APIConnectionError as e:  # Correct for network issues
+    except APIConnectionError as e:
         logging.error(f"API Connection Error: {e}")
         return jsonify({"response": "A network error occurred."}), 500
-    except AuthenticationError as e:  # Authentication issues
+    except AuthenticationError as e:
         logging.error(f"Authentication Error: {e}")
         return jsonify({"response": "API Key authentication failed."}), 401
-    except RateLimitError as e:  # Rate limit errors
+    except RateLimitError as e:
         logging.error(f"Rate Limit Exceeded: {e}")
         return jsonify({"response": "Rate limit exceeded, please try again later."}), 429
-    except OpenAIError as e:  # Generic OpenAI API errors
+    except OpenAIError as e:
         logging.error(f"OpenAI API Error: {e}")
         return jsonify({"response": "An error occurred with the OpenAI API."}), 500
     except Exception as e:
