@@ -49,6 +49,7 @@ def chat():
         # Log the response to see if there are any issues
         logging.info(f"OpenAI Response: {response}")
 
+        # Extract the response text
         reply_text = response['choices'][0]['message']['content'].strip()
         logging.info(f"Reply text: {reply_text}")
         return jsonify({"response": reply_text})
