@@ -5,7 +5,7 @@ import os
 import logging
 
 # Import available error classes from OpenAI library
-from openai.error import APIConnectionError, AuthenticationError, RateLimitError, OpenAIError
+from openai.error import OpenAIError, APIError, APIConnectionError, RateLimitError, AuthenticationError
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
